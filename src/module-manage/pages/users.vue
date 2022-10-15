@@ -3,13 +3,13 @@
     <el-card>
       <el-button size="small" type="success" style="float:right;">
         <i class="el-icon-edit"></i>
-        <span>新增用户</span>
+        <span @click="addNewUser">新增用户</span>
       </el-button>
       <div style="margin-bottom:20px;">
         <el-form style="width:60%;display: flex;height: 32px;line-height: 32px;">
-        <el-input size="small" style="width:200px;" placeholder="根据用户名搜索"></el-input>
-        <el-button size="small" style="margin-left:15px;">清空</el-button>
-  <el-button size="small" type="primary">搜索</el-button>
+        <el-input v-model="page.username" size="small" style="width:200px;" placeholder="根据用户名搜索"></el-input>
+        <el-button @click="clear" size="small" style="margin-left:15px;">清空</el-button>
+  <el-button @click="getUserList" size="small" type="primary">搜索</el-button>
 </el-form>
       </div>
       <el-alert
@@ -18,9 +18,9 @@
     show-icon>
   </el-alert>
   <el-table
-  @row-click='changecolor'
-  :row-style='cellStyle'
+  v-loading="loading"
   :header-cell-style="{backgroundColor:'#FAFAFA'}"
+  highlight-current-row
   size="medium"
   element-loading-text="给我一点时间"
       :data="userList"
@@ -64,7 +64,10 @@
       align="center"
         label="操作"
         width="180">
-        <el-button type="primary" icon="el-icon-edit" plain circle></el-button>
+        <template slot-scope="scope">
+          <el-button @click="change(scope.row)" type="primary" icon="el-icon-edit" plain circle></el-button>
+        <el-button v-if="scope.row.id!==2" @click="del(scope.row)" type="danger" icon="el-icon-delete" plain circle></el-button>
+        </template>
       </el-table-column>
     </el-table>
     <el-pagination style="float:right;margin-top: 20px;margin-bottom: 20px;"
@@ -72,15 +75,22 @@
       :page-sizes="[10, 20, 30, 50]"
       :page-size="page.pagesize"
       layout="prev, pager, next,sizes,  jumper"
-      :total="count">
+      :total="count"
+      @current-change="changePage">
     </el-pagination>
     </el-card>
+    <addUsers ref="addNew" @getUserList="getUserList"></addUsers>
   </div>
 </template>
 
 <script>
-import { list } from '../../api/base/users'
+import { done } from 'nprogress'
+import { list, remove } from '../../api/base/users'
+import addUsers from './addUsers.vue'
 export default {
+  components: {
+    addUsers
+  },
   data () {
     return {
       page: {
@@ -88,10 +98,11 @@ export default {
         pagesize: 10,
         username: ''
       },
-      userList: {},
+      userList: [],
       count: 0,
       alertTitle: '共0条记录',
-      clickedRow: '' // 点击的单元格行号
+      clickedRow: '', // 点击的单元格行号
+      loading: true
     }
   },
 
@@ -102,36 +113,40 @@ export default {
   methods: {
     async getUserList () {
       const { data } = await list(this.page)
+      this.loading = false
       this.userList = data.list
       this.count = data.counts
       this.alertTitle = `共${this.count}条记录`
       console.log(data)
     },
-    addClassName (row) {
-      console.log(row)
+    addNewUser () {
+      this.$refs.addNew.show()
+      this.$refs.addNew.getPermission()
+      this.$refs.addNew.edit = false
     },
-    changecolor (row, column, cell, event) {
-      this.clickedRow = row.dtuSort // 取个唯一值用作判定行
-
-      this.clickedColumn = column.property
+    changePage (val) {
+      this.loading = true
+      this.page.page = val
+      this.getUserList()
     },
-
-    // 控制单元格样式
-
-    cellStyle ({ row, rowIndex }) {
-      if (row.dtuSort === this.clickedRow) {
-        return {
-
-          background: '#ECF5FF'
-
-        }
-      } else {
-        return {
-
-          background: 'white'
-
-        }
-      }
+    del (row) {
+      const t = this
+      this.$confirm('确认删除？').then(async function () {
+        await remove({ id: row.id })
+        t.$message({ message: '成功', type: 'success' })
+        t.getUserList()
+        done()
+      })
+    },
+    change (row) {
+      // console.log(row)
+      this.$refs.addNew.show()
+      this.$refs.addNew.showEdit(row)
+      this.$refs.addNew.getPermission()
+    },
+    clear () {
+      this.page.username = ''
+      this.getUserList()
     }
   }
 }
