@@ -2,31 +2,136 @@
   <div class="container">
     <el-card class="box-card">
       <div class="btn_wrapper">
-        <el-form :model="groupQuestionForm">
+        <el-form :model="groupQuestionForm" label-width="80px">
           <el-row>
             <el-col :span="6">
-              <el-form-item label="关键字" class="keywords" size="small">
+              <el-form-item label="活动名称:" size="small">
                 <el-input
                   v-model="groupQuestionForm.name"
                   size="small"
+                  placeholder="根据编号搜索"
                 ></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="6" offset="12">2</el-col>
+            <el-col :span="6" :offset="12">
+              <el-form-item size="small" style="text-align: right">
+                <el-button size="small">清除</el-button>
+                <el-button size="small" type="primary">搜索</el-button>
+              </el-form-item>
+            </el-col>
           </el-row>
         </el-form>
+        <data-alert :total="total"></data-alert>
+        <el-table
+          size="medium"
+          :data="tableData"
+          class="tableList"
+          header-cell-style="background-color: #fafafa;"
+          width="100%"
+        >
+          <el-table-column prop="id" label="编号"> </el-table-column>
+          <el-table-column prop="questionType" label="题型">
+            <template slot-scope="{ row }">
+              {{ changeToLabel(row.questionType, questionType) }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="catalog" label="题目编号" width="220">
+            <template slot-scope="{ row: { questionIDs } }">
+              <div v-for="item in questionIDs" :key="item.id">
+                <a href="#" style="color: rgb(0, 153, 255)">
+                  {{ item.number }}</a
+                >
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="addTime" label="录入时间"> </el-table-column>
+          <el-table-column prop="totalSeconds" label="答题时间(s)">
+            <template slot-scope="{ row }">
+              {{ row.totalSeconds / 60 }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="accuracyRate" label="正确率">
+          </el-table-column>
+          <el-table-column prop="userName" label="录入人"> </el-table-column>
+          <el-table-column label="操作">
+            <template>
+              <el-button
+                type="danger"
+                icon="el-icon-delete"
+                circle
+                plain="true"
+              ></el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-pagination
+          style="text-align: right; margin-top: 20px"
+          background
+          layout="prev, pager, next, sizes,jumper"
+          :total="total"
+          :page-sizes="[5, 10, 20, 30]"
+          :page-size.sync="pagesize"
+          :current-page.sync="page"
+          @current-change="getGroupQuestion"
+          @size-change="getGroupQuestion"
+        >
+        </el-pagination>
       </div>
     </el-card>
   </div>
 </template>
 
 <script>
+import dataAlert from './components/questions-choice/dataAlert.vue'
+
+import groupQuestionList from '@/mock/questions.js'
+import { questionType } from '@/api/hmmm/constants.js'
 export default {
+  name: 'questionsRandom',
+  components: {
+    dataAlert
+  },
+  mounted () {
+    this.getGroupQuestion()
+  },
   data () {
     return {
-      groupQuestionForm: {}
+      groupQuestionForm: {},
+      tableData: [],
+      baseUrl: 'http://liufusong.top:7001/questions/randoms?',
+      page: 1,
+      pagesize: 20,
+      keyword: '',
+      total: 0,
+      questionType
+    }
+  },
+  methods: {
+    getGroupQuestion () {
+      console.log(this.page, this.pagesize)
+      const list = groupQuestionList.list
+      const res = list({
+        url: this.baseUrl + `page=${this.page}&pagesize=${this.pagesize}&keyword=${this.keyword}`
+      })
+      console.log(res)
+      this.total = Number(res.counts)
+      this.pagesize = Number(res.pagesize)
+      this.page = Number(res.page)
+      this.tableData = res.items
+    }
+  },
+  computed: {
+    changeToLabel () {
+      return function (columnType, type) {
+        const find = type.find(item => {
+          return item.value === Number(columnType)
+        })
+        const label = find ? find.label : ''
+        return label
+      }
     }
   }
+
 }
 </script>
 
@@ -41,6 +146,9 @@ export default {
   }
   .el-form-item__content {
     margin-left: 32px;
+  }
+  .el-input__inner {
+    overflow: visible;
   }
 }
 </style>
