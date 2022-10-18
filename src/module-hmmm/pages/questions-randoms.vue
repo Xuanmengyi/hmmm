@@ -70,8 +70,8 @@
           layout="prev, pager, next, sizes,jumper"
           :total="total"
           :page-sizes="[5, 10, 20, 30]"
-          :page-size.sync="pagesize"
-          :current-page.sync="page"
+          :page-size="pagesize"
+          :current-page="page"
           @current-change="getGroupQuestion"
           @size-change="getGroupQuestion"
         >
