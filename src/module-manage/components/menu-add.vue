@@ -43,7 +43,7 @@
 </template>
 <script>
 import { list, detail, update, add } from '@/api/base/menus'
-import Utils from '@/components/TreeTable/utils/dataTranslate.js'
+// import Utils from '@/components/TreeTable/utils/dataTranslate.js'
 let _this = []
 export default {
   name: 'items',

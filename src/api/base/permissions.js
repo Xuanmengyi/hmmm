@@ -1,5 +1,6 @@
 import { createAPI } from '@/utils/request'
 
+// 权限管理
 export const list = data => createAPI('/permissions', 'get', data)
 export const simple = data => createAPI('/permissions/simple', 'get', data)
 export const add = data => createAPI('/permissions', 'post', data)
