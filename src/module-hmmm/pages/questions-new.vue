@@ -3,7 +3,7 @@
   <div class="container questionNew">
     <el-card>
       <div slot="header" class="clearfix">
-        <span>{{ detail ? '修改试题' : '试题录入' }}</span>
+        <span>{{ currentId ? '修改试题' : '试题录入' }}</span>
       </div>
       <el-form
         :model="questionForm"
@@ -196,9 +196,9 @@
         </el-form-item>
         <el-form-item>
           <el-button
-            :type="detail ? 'success' : 'primary'"
+            :type="currentId ? 'success' : 'primary'"
             @click="submitForm"
-            >{{ detail ? '确认修改' : '确认提交' }}</el-button
+            >{{ currentId ? '确认修改' : '确认提交' }}</el-button
           >
         </el-form-item>
       </el-form>
@@ -220,8 +220,8 @@ export default {
   },
   data () {
     return {
-      detail: this.$route.params.data,
-      questionForm: this.$route.params.data ? this.$route.params.data : {
+      currentId: this.$route.params.id,
+      questionForm: {
         subjectID: null,
         catalogID: null,
         enterpriseID: null,
@@ -291,13 +291,13 @@ export default {
     this.getSubjects()
     this.getProvinces()
     this.getCompanys()
-    if (this.$route.params.data) {
-      this.changeTypeIsRight(this.$route.params.data)
+    if (this.$route.params.id) {
+      this.changeTypeIsRight(this.$route.params.id)
     }
   },
 
   methods: {
-    changeTypeIsRight (data) {
+    async changeTypeIsRight (id) {
       // options.forEach(item => {
       //   if (item.isRight === 0) {
       //     this.$set(item, 'isRight', Boolean(false))
@@ -306,6 +306,9 @@ export default {
       //   }
       // })
       //   this.questionForm.options = options
+      const { detail } = await import('@/api/hmmm/questions.js')
+      const { data } = await detail({ id })
+      this.questionForm = data
       if (data.questionType === '1') {
         const find = data.options.find(item => item.isRight === 1)
 
@@ -383,9 +386,9 @@ export default {
         const { add } = await import('@/api/hmmm/questions.js')
         await add({ ...this.questionForm, tags: this.questionForm.tags.join(',') })
         this.$router.push('/questions/list')
-        this.$message.success(this.detail ? '修改成功' : '录入成功')
+        this.$message.success(this.currentId ? '修改成功' : '录入成功')
       } catch (error) {
-        this.$message.error(this.detail ? '修改失败' : '录入失败')
+        this.$message.error(this.currentId ? '修改失败' : '录入失败')
       }
     }
   }
