@@ -6,10 +6,13 @@
           <el-row>
             <el-col :span="6">
               <el-form-item label="关键字" class="keywords" size="small">
-                <el-input v-model="groupQuestionForm.name"></el-input>
+                <el-input
+                  v-model="groupQuestionForm.name"
+                  size="small"
+                ></el-input>
               </el-form-item>
             </el-col>
-            <el-row> <el-col :span="6" offset="12">2</el-col> </el-row>
+            <el-col :span="6" offset="12">2</el-col>
           </el-row>
         </el-form>
       </div>
