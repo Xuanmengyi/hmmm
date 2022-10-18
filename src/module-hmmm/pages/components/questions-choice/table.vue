@@ -182,11 +182,13 @@ export default {
       this.examineForm.id = row.id
       this.examineDialog = true
     },
-    edit (row) {
+    async edit (row) {
+      const { detail } = await import('@/api/hmmm/questions.js')
+      const { data } = await detail(row)
       this.$router.push({
         name: 'questions-new',
         params: {
-          row
+          data
         }
       })
     },
