@@ -176,6 +176,11 @@ export default {
     },
     cancelExaminine () {
       this.$refs.examineForm.resetFields()
+      this.examineForm = {
+        id: 0,
+        chkState: 1,
+        chkRemarks: ''
+      }
       this.examineDialog = false
     },
     examineQuestion (row) {
