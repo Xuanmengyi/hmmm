@@ -3,7 +3,7 @@
     <el-card>
       <el-button size="small" type="success" style="float:right;">
         <i class="el-icon-edit"></i>
-        <span @click="addNew">新增目录</span>
+        <span @click="addNew">新增技巧</span>
       </el-button>
       <div style="margin-bottom:20px;">
         <el-form style="width:60%;display: flex;height: 32px;line-height: 32px;" label-width="80px">

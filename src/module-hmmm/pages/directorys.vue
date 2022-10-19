@@ -114,7 +114,8 @@ export default {
     return {
       page: {
         page: 1,
-        pagesize: 10
+        pagesize: 10,
+        subjectID: this.$route.query.id
       },
       directList: [],
       count: 0,
@@ -122,7 +123,8 @@ export default {
       clickedRow: '', // 点击的单元格行号
       loading: true,
       state: '',
-      stateList: []
+      stateList: [],
+      type: this.$route.query.type
     }
   },
   created () {

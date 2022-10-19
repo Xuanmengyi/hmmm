@@ -36,9 +36,9 @@
       >
         <el-table-column type="index" width="50" label="序号">
         </el-table-column>
-        <el-table-column prop="subjectName" label="学科名称" width="220">
+        <el-table-column prop="subjectName" label="学科名称" width="170">
         </el-table-column>
-        <el-table-column prop="username" label="创建者" width="220">
+        <el-table-column prop="username" label="创建者" width="165">
         </el-table-column>
         <el-table-column prop="addDate" label="创建日期" width="160">
           <template slot-scope="{ row }">
@@ -49,16 +49,16 @@
           prop="isFrontDisplay"
           :formatter="formatterFn"
           label="前台是否显示"
-          width="190"
+          width="165"
         >
         </el-table-column>
-        <el-table-column prop="twoLevelDirectory" label="二级目录" width="200">
+        <el-table-column prop="twoLevelDirectory" label="二级目录" width="165">
         </el-table-column>
-        <el-table-column prop="tags" label="标签" width="200">
+        <el-table-column prop="tags" label="标签" width="165">
         </el-table-column>
-        <el-table-column prop="totals" label="题目数量" width="170">
+        <el-table-column prop="totals" label="题目数量" width="165">
         </el-table-column>
-        <el-table-column label="操作" width="230">
+        <el-table-column label="操作" width="240">
           <template slot-scope="{ row }">
             <el-button type="text" @click="classification(row)"
               >学科分类</el-button
@@ -146,8 +146,8 @@ export default {
       this.tableList()
     },
     async classification (row) {
-      this.$router.push('/subjects/directorys')
-      await list1({ subjectID: row.id })
+      this.$router.push({ path: '/subjects/directorys', query: { id: row.id, t: Date.now() } })
+      // await list1({ subjectID: row.id })
     },
     async lableBtn (row) {
       this.$router.push('/subjects/tags')
