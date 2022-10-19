@@ -103,7 +103,7 @@
         background
         :page-sizes="[10, 20, 30, 50]"
         :page-size="page.pagesize"
-        layout="prev, pager, next,sizes,  jumper"
+        layout="prev, pager, next,sizes,jumper"
         :total="count"
         @current-change="getTags"
         @size-change="getTags"
@@ -192,7 +192,7 @@ export default {
       this.$refs.add.addNew()
     },
     edit (row) {
-      // console.log(row)
+      console.log(row)
       this.$refs.add.edits(row)
     }
   }
