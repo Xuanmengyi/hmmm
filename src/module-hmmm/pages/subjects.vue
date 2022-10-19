@@ -94,8 +94,8 @@
 import subjectsAdd from './subjectAdd.vue'
 import { Reception } from '@/api/hmmm/constants'
 import { list, remove } from '@/api/hmmm/subjects.js'
-import { list1 } from '@/api/hmmm/directorys'
-import { list2 } from '@/api/hmmm/tags'
+import { list as list1 } from '@/api/hmmm/directorys'
+import { list as list2 } from '@/api/hmmm/tags'
 export default {
   data () {
     return {

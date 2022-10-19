@@ -10,7 +10,7 @@
 import { createAPI } from '@/utils/request'
 
 // 标签列表
-export const list2 = data => createAPI('/tags', 'get', data)
+export const list = data => createAPI('/tags', 'get', data)
 
 // 标签简单列表
 export const simple = data => createAPI('/tags/simple', 'get', data)
