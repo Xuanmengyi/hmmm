@@ -213,7 +213,7 @@
               style="background: #ecf5ff; color: #409eff"
               icon="el-icon-view"
               circle
-              @click="previewBtn(row)"
+              @click="previewQuestion(row)"
             ></el-button>
             <el-button
               style="background: #f0f9eb; color: #67c23a"
@@ -222,7 +222,7 @@
               circle
               @click="
                 $router.push({
-                  path: '/questions/new',
+                  name: 'questions-new',
                   params: {
                     id: row.id,
                   },
@@ -271,9 +271,9 @@ import { simple } from '@/api/hmmm/subjects.js'
 import { questionType, difficulty, direction } from '@/api/hmmm/constants.js'
 import { provinces, citys } from '@/api/hmmm/citys.js'
 import { list, remove, choiceAdd } from '@/api/hmmm/questions.js'
-import PreviewDialog from './previewDialog.vue'
+import PreviewDialog from './components/questions-choice/previewDialog.vue'
 export default {
-  name: 'question_choice',
+  name: 'questionBasis',
   components: { PreviewDialog },
   data () {
     return {
@@ -374,9 +374,12 @@ export default {
       await remove({ id: id })
       this.handleList()
     },
-    previewBtn (row) {
-      // console.log(row)
-      this.currentRow = row
+    async previewQuestion (row) {
+      const { detail } = await import('@/api/hmmm/questions.js')
+      const data = { id: row.id }
+      const res = await detail(data)
+      this.currentRow = res.data
+
       this.previewDialog = true
     }
   }

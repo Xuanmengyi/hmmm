@@ -28,7 +28,7 @@
           size="medium"
           :data="tableData"
           class="tableList"
-          header-cell-style="background-color: #fafafa;"
+          :header-cell-style="{ backgroundColor: '#FAFAFA' }"
           width="100%"
         >
           <el-table-column prop="id" label="编号"> </el-table-column>

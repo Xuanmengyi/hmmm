@@ -5,7 +5,7 @@
     size="medium"
     :data="tableData"
     class="tableList"
-    header-cell-style="background-color: #fafafa;"
+    :header-cell-style="{ backgroundColor: '#FAFAFA' }"
     width="auto"
   >
     <el-table-column prop="number" label="试题编号" width="120">

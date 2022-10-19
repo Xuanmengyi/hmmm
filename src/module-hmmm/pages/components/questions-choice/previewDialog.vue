@@ -64,7 +64,7 @@
         v-for="item in currentRow.options"
         :key="item.id"
       >
-        <el-checkbox :checked="item.isRight" :label="item.isRight">{{
+        <el-checkbox :checked="Boolean(item.isRight)" :label="item.isRight">{{
           item.title
         }}</el-checkbox>
       </div>
@@ -117,12 +117,11 @@ export default {
     return {
       radioOptions: '1',
       isDisplay: true,
-      checked: true
+      checked: 1
     }
   },
   methods: {
     handleClose () {
-      this.currentRow = {}
       this.$emit('update:previewDialog', false)
     }
   }

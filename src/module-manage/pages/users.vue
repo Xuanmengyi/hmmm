@@ -1,83 +1,90 @@
 <template>
   <div class="app-container">
     <el-card>
-      <el-button size="small" type="success" style="float:right;">
+      <el-button size="small" type="success" style="float: right">
         <i class="el-icon-edit"></i>
         <span @click="addNewUser">新增用户</span>
       </el-button>
-      <div style="margin-bottom:20px;">
-        <el-form style="width:60%;display: flex;height: 32px;line-height: 32px;">
-        <el-input v-model="page.username" size="small" style="width:200px;" placeholder="根据用户名搜索"></el-input>
-        <el-button @click="clear" size="small" style="margin-left:15px;">清空</el-button>
-  <el-button @click="getUserList" size="small" type="primary">搜索</el-button>
-</el-form>
+      <div style="margin-bottom: 20px">
+        <el-form
+          style="width: 60%; display: flex; height: 32px; line-height: 32px"
+        >
+          <el-input
+            v-model="page.username"
+            size="small"
+            style="width: 200px"
+            placeholder="根据用户名搜索"
+          ></el-input>
+          <el-button @click="clear" size="small" style="margin-left: 15px"
+            >清空</el-button
+          >
+          <el-button @click="getUserList" size="small" type="primary"
+            >搜索</el-button
+          >
+        </el-form>
       </div>
-      <el-alert
-    :title="alertTitle"
-    type="info"
-    show-icon>
-  </el-alert>
-  <el-table
-  v-loading="loading"
-  :header-cell-style="{backgroundColor:'#FAFAFA'}"
-  highlight-current-row
-  size="medium"
-  element-loading-text="给我一点时间"
-      :data="userList"
-      style="width: 100%;margin-top: 20px;">
-      <el-table-column
-      align="center"
-        prop="id"
-        label="序号"
-        width="180">
-      </el-table-column>
-      <el-table-column
-      align="center"
-        prop="email"
-        label="邮箱"
-        width="180">
-      </el-table-column>
-      <el-table-column
-      align="center"
-        prop="phone"
-        label="联系电话">
-      </el-table-column>
-      <el-table-column
-      align="center"
-        prop="username"
-        label="用户名"
-        width="180">
-      </el-table-column>
-      <el-table-column
-      align="center"
-        prop="permission_group_title"
-        label="权限组名称"
-        width="180">
-      </el-table-column>
-      <el-table-column
-      align="center"
-        prop="role"
-        label="角色"
-        width="180">
-      </el-table-column>
-      <el-table-column
-      align="center"
-        label="操作"
-        width="180">
-        <template slot-scope="scope">
-          <el-button @click="change(scope.row)" type="primary" icon="el-icon-edit" plain circle></el-button>
-        <el-button v-if="scope.row.id!==2" @click="del(scope.row)" type="danger" icon="el-icon-delete" plain circle></el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-pagination style="float:right;margin-top: 20px;margin-bottom: 20px;"
-    background
-      :page-sizes="[10, 20, 30, 50]"
-      :page-size="page.pagesize"
-      layout="prev, pager, next,sizes,  jumper"
-      :total="count"
-      @current-change="changePage">
-    </el-pagination>
+      <el-alert :title="alertTitle" type="info" show-icon> </el-alert>
+      <el-table
+        v-loading="loading"
+        :header-cell-style="{ backgroundColor: '#FAFAFA' }"
+        highlight-current-row
+        size="medium"
+        element-loading-text="给我一点时间"
+        :data="userList"
+        style="width: 100%; margin-top: 20px"
+      >
+        <el-table-column align="center" prop="id" label="序号" width="180">
+        </el-table-column>
+        <el-table-column align="center" prop="email" label="邮箱" width="180">
+        </el-table-column>
+        <el-table-column align="center" prop="phone" label="联系电话">
+        </el-table-column>
+        <el-table-column
+          align="center"
+          prop="username"
+          label="用户名"
+          width="180"
+        >
+        </el-table-column>
+        <el-table-column
+          align="center"
+          prop="permission_group_title"
+          label="权限组名称"
+          width="180"
+        >
+        </el-table-column>
+        <el-table-column align="center" prop="role" label="角色" width="180">
+        </el-table-column>
+        <el-table-column align="center" label="操作" width="180">
+          <template slot-scope="scope">
+            <el-button
+              @click="change(scope.row)"
+              type="primary"
+              icon="el-icon-edit"
+              plain
+              circle
+            ></el-button>
+            <el-button
+              v-if="scope.row.id !== 2"
+              @click="del(scope.row)"
+              type="danger"
+              icon="el-icon-delete"
+              plain
+              circle
+            ></el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination
+        style="float: right; margin-top: 20px; margin-bottom: 20px"
+        background
+        :page-sizes="[10, 20, 30, 50]"
+        :page-size="page.pagesize"
+        layout="prev, pager, next,sizes,  jumper"
+        :total="count"
+        @current-change="changePage"
+      >
+      </el-pagination>
     </el-card>
     <addUsers ref="addNew" @getUserList="getUserList"></addUsers>
   </div>
@@ -154,7 +161,7 @@ export default {
 
 <style scoped lang='less'>
 .el-alert__icon {
-    font-size: 16px;
-    width: 16px;
+  font-size: 16px;
+  width: 16px;
 }
 </style>
