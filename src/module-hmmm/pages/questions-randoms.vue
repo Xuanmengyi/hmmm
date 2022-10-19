@@ -5,9 +5,9 @@
         <el-form :model="groupQuestionForm" label-width="80px">
           <el-row>
             <el-col :span="6">
-              <el-form-item label="活动名称:" size="small">
+              <el-form-item label="关键词:" size="small">
                 <el-input
-                  v-model="groupQuestionForm.name"
+                  v-model="keyword"
                   size="small"
                   placeholder="根据编号搜索"
                 ></el-input>
@@ -15,8 +15,10 @@
             </el-col>
             <el-col :span="6" :offset="12">
               <el-form-item size="small" style="text-align: right">
-                <el-button size="small">清除</el-button>
-                <el-button size="small" type="primary">搜索</el-button>
+                <el-button size="small" @click="clearKeyword">清除</el-button>
+                <el-button size="small" type="primary" @click="getGroupQuestion"
+                  >搜索</el-button
+                >
               </el-form-item>
             </el-col>
           </el-row>
@@ -37,8 +39,12 @@
           </el-table-column>
           <el-table-column prop="catalog" label="题目编号" width="220">
             <template slot-scope="{ row: { questionIDs } }">
-              <div v-for="item in questionIDs" :key="item.id">
-                <a href="#" style="color: rgb(0, 153, 255)">
+              <div v-for="(item, index) in questionIDs" :key="index">
+                <a
+                  href="#"
+                  style="color: rgb(0, 153, 255)"
+                  @click="previewQuestionDialog(item.id)"
+                >
                   {{ item.number }}</a
                 >
               </div>
@@ -54,12 +60,13 @@
           </el-table-column>
           <el-table-column prop="userName" label="录入人"> </el-table-column>
           <el-table-column label="操作">
-            <template>
+            <template slot-scope="{ row }">
               <el-button
                 type="danger"
                 icon="el-icon-delete"
                 circle
-                plain="true"
+                plain
+                @click="del(row.id)"
               ></el-button>
             </template>
           </el-table-column>
@@ -70,26 +77,33 @@
           layout="prev, pager, next, sizes,jumper"
           :total="total"
           :page-sizes="[5, 10, 20, 30]"
-          :page-size="pagesize"
-          :current-page="page"
+          :page-size.sync="pagesize"
+          :current-page.sync="page"
           @current-change="getGroupQuestion"
           @size-change="getGroupQuestion"
         >
         </el-pagination>
       </div>
+      <previewDialog
+        :previewDialog.sync="previewDialog"
+        :currentRow="currentRow"
+      ></previewDialog>
     </el-card>
   </div>
 </template>
 
 <script>
 import dataAlert from './components/questions-choice/dataAlert.vue'
+import previewDialog from './components/questions-choice/previewDialog.vue'
 
 import groupQuestionList from '@/mock/questions.js'
 import { questionType } from '@/api/hmmm/constants.js'
+
 export default {
   name: 'questionsRandom',
   components: {
-    dataAlert
+    dataAlert,
+    previewDialog
   },
   mounted () {
     this.getGroupQuestion()
@@ -103,21 +117,47 @@ export default {
       pagesize: 20,
       keyword: '',
       total: 0,
-      questionType
+      questionType,
+      previewDialog: false,
+      currentRow: {}
     }
   },
   methods: {
     getGroupQuestion () {
-      console.log(this.page, this.pagesize)
       const list = groupQuestionList.list
+      console.log(this.page, this.pagesize)
       const res = list({
         url: this.baseUrl + `page=${this.page}&pagesize=${this.pagesize}&keyword=${this.keyword}`
       })
       console.log(res)
       this.total = Number(res.counts)
-      this.pagesize = Number(res.pagesize)
-      this.page = Number(res.page)
       this.tableData = res.items
+    },
+    clearKeyword () {
+      this.keyword = ''
+      this.getGroupQuestion()
+    },
+    async previewQuestionDialog (id) {
+      const { detail } = await import('@/api/hmmm/questions.js')
+      const data = { id }
+      const res = await detail(data)
+      this.currentRow = res.data
+
+      this.previewDialog = true
+    },
+    del (id) {
+      this.$confirm('您确认删除这个题目吗', '提示', {
+        type: 'warning'
+      }).then(res => {
+        const deleteQuestion = groupQuestionList.delete
+        deleteQuestion({
+          body: JSON.stringify({
+            id: id
+          })
+        })
+        this.$message.success('操作成功')
+        this.getGroupQuestion()
+      })
     }
   },
   computed: {
