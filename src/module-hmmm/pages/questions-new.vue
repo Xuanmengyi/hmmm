@@ -187,8 +187,8 @@
             placeholder="请选择试题标签"
           >
             <el-option
-              :label="item.label"
-              :value="item.label"
+              :label="item"
+              :value="item"
               v-for="(item, index) in tagsSimple"
               :key="index"
             ></el-option>
@@ -258,7 +258,7 @@ export default {
             title: ''
           }
         ],
-        tags: '',
+        tags: [],
         answer: '',
         videoURL: ''
       },
@@ -308,6 +308,13 @@ export default {
       //   this.questionForm.options = options
       const { detail } = await import('@/api/hmmm/questions.js')
       const { data } = await detail({ id })
+      console.log(data.tags)
+      // console.log(this.tagsSimple)
+      console.log(data.tags)
+      this.$nextTick(() => {
+        this.questionForm.tags = data.tags.split(',')
+      })
+      // this.questionForm.tags = this.tagsSimple
       this.questionForm = data
       if (data.questionType === '1') {
         const find = data.options.find(item => item.isRight === 1)
@@ -332,7 +339,8 @@ export default {
       this.directorysSimple = res.data
       const tags = await import('@/api/hmmm/tags.js')
       const res1 = await tags.simple({ subjectID: val })
-      this.tagsSimple = res1.data
+      this.questionForm.tags = []
+      this.tagsSimple = res1.data.map(item => item.label)
 
       // this.questionForm.tags = this.tagsSimple.join(',')
     },

@@ -126,7 +126,8 @@ export default {
     return {
       page: {
         page: 1,
-        pagesize: 10
+        pagesize: 10,
+        subjectID: this.$route.query.id
       },
       directList: [],
       count: 0,

@@ -25,7 +25,7 @@
             class="el-icon-info"
             style="color: #909399; margin-top: 10px; margin-left: 23px"
           ></i>
-          <span class="wenzi">共{{counts}}条记录</span>
+          <span class="wenzi">共{{ counts }}条记录</span>
         </div></el-col
       >
       <el-table
@@ -150,8 +150,8 @@ export default {
       // await list1({ subjectID: row.id })
     },
     async lableBtn (row) {
-      this.$router.push('/subjects/tags')
-      await list2({ subjectID: row.id })
+      this.$router.push({ path: '/subjects/tags', query: { id: row.id, t: Date.now() } })
+      // await list2({ subjectID: row.id })
     }
   }
 }
