@@ -311,7 +311,6 @@ export default {
       this.questionForm = data
       if (data.questionType === '1') {
         const find = data.options.find(item => item.isRight === 1)
-
         this.rightCode = find ? find.code : ''
       } else if (data.questionType === '2') {
         data.options.forEach(item => {
@@ -391,6 +390,9 @@ export default {
         this.$message.error(this.currentId ? '修改失败' : '录入失败')
       }
     }
+  },
+  watch: {
+
   }
 }
 </script>

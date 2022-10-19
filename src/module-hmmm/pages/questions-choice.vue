@@ -275,6 +275,10 @@ export default {
 </script>
 
 <style scoped lang='less'>
+.container {
+  padding: 0 10px;
+  margin: 10px 0;
+}
 .btn_wrapper {
   margin-bottom: 15px;
   display: flex;
