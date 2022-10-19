@@ -13,14 +13,14 @@ import * as filters from './filters' // global filters
 import './mock' // simulation data
 // font-awesome
 import 'font-awesome/css/font-awesome.css'
-import Editor from '@/module-hmmm/Editor'
+// import Editor from '@/module-hmmm/Editor'
 /*
  * 注册 - 业务模块
  */
 import dashboard from '@/module-dashboard/' // 面板
 import base from '@/module-manage/' // 用户管理
 import hmmm from '@/module-hmmm/'
-Vue.use(Editor) // 黑马面面
+// Vue.use(Editor) // 黑马面面
 
 Vue.use(dashboard, store)
 Vue.use(base, store)

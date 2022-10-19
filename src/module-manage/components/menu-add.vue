@@ -64,6 +64,9 @@ export default {
     },
     PermissionGroupsList: {
       type: Array
+    },
+    tableData: {
+      type: Array
     }
   },
   data () {
@@ -192,7 +195,8 @@ export default {
     },
     // 退出
     handleClose () {
-      this.$emit('handleCloseModal')
+      this.handleResetForm()
+      this.dialogFormVisible = false
     },
     // 菜单和权限点选择：编辑
     handle_Edit (object) {
@@ -247,6 +251,9 @@ export default {
           }
         })
       }
+      this.$emit('getMenuList')
+      this.dialogFormVisible = false
+      this.typeStatus = false
     },
     // 表单详情
     dataRest (obj) {
@@ -305,8 +312,9 @@ export default {
   // 创建完毕状态
   created () {
     _this = this
+    this.handleResetForm()
+    // 组件更新
   },
-  // 组件更新
   updated: function () {}
 }
 </script>
