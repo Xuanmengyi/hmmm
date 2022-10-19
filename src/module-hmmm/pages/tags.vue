@@ -1,5 +1,9 @@
 <template>
-  <div class='container'>标签管理</div>
+  <div class="container">
+    <el-card class="box-card">
+      <div class="btn_wrapper"></div>
+    </el-card>
+  </div>
 </template>
 
 <script>

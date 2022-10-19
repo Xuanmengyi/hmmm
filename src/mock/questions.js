@@ -22,6 +22,7 @@ export default {
   list: config => {
     console.log(config)
     const { page = 1, pagesize = 20, keyword = '' } = param2Obj(config.url)
+    console.log(page)
     const filterList = list.filter(item => item.id.includes(keyword))
     const data = filterList.slice((page - 1) * pagesize, page * pagesize)
     return {
