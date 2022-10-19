@@ -174,18 +174,18 @@
       <el-table :data="tableData" style="width: 100%">
         <el-table-column prop="number" label="试题编号" width="140">
         </el-table-column>
-        <el-table-column prop="subjectID" label="学科" width="180">
+        <el-table-column prop="subject" label="学科" width="180">
         </el-table-column>
         <el-table-column
-          prop="catalogID"
+          prop="catalog"
           label="目录"
           width="180"
         ></el-table-column>
-        <el-table-column
-          prop="questionType"
-          label="题型"
-          width="160"
-        ></el-table-column>
+        <el-table-column prop="questionType" label="题型" width="160">
+          <template slot-scope="{ row }">
+            {{ changeToLabel(row.questionType, questionType) }}
+          </template>
+        </el-table-column>
         <el-table-column prop="question" label="题干" width="220">
           <template slot-scope="{ row }">
             <span v-html="row.question"></span>
@@ -196,11 +196,11 @@
           label="录入时间"
           width="200"
         ></el-table-column>
-        <el-table-column
-          prop="difficulty"
-          label="难度"
-          width="200"
-        ></el-table-column>
+        <el-table-column prop="difficulty" label="难度" width="200">
+          <template slot-scope="{ row }">
+            {{ changeToLabel(row.difficulty, difficulty) }}
+          </template>
+        </el-table-column>
         <el-table-column
           prop="creator"
           label="录入人"
@@ -381,6 +381,17 @@ export default {
       this.currentRow = res.data
 
       this.previewDialog = true
+    }
+  },
+  computed: {
+    changeToLabel () {
+      return function (columnType, type) {
+        const find = type.find(item => {
+          return item.value === Number(columnType)
+        })
+        const label = find ? find.label : ''
+        return label
+      }
     }
   }
 }
