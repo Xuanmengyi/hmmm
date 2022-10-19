@@ -10,9 +10,9 @@
           style="width: 60%; display: flex; height: 32px; line-height: 32px"
           label-width="80px"
         >
-          <el-form-item size="small" label="目录名称"
+          <el-form-item size="small" label="标签名称"
             ><el-input
-              v-model="page.directoryName"
+              v-model="page.tagName"
               size="small"
               style="width: 200px"
             ></el-input
@@ -144,6 +144,7 @@ export default {
       try {
         this.loading = true
         const { data } = await list(this.page)
+        console.log(data)
         this.loading = false
         this.directList = data.items
         this.count = data.counts
@@ -184,7 +185,7 @@ export default {
     },
     clear () {
       delete this.page.state
-      delete this.page.directoryName
+      delete this.page.tagName
       // this.$forceUpdate()
       this.getTags()
     },
