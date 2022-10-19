@@ -302,6 +302,7 @@ export function debounce (func, wait, immediate) {
   }
 }
 
+// 深度遍历
 export function deepClone (source) {
   if (source === null) {
     throw new Error('error -> source is null')

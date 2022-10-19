@@ -8,6 +8,18 @@
  */
 
 // 状态
+export const Reception = [
+  {
+    value: 1,
+    label: '是'
+  },
+  {
+    value: 0,
+    label: '否'
+  }
+]
+
+// 状态
 export const status = [
   {
     value: 1,
