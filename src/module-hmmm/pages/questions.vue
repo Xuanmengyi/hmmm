@@ -172,47 +172,97 @@
       >
       <!-- <table></table> -->
       <el-table :data="tableData" style="width: 100%">
-        <el-table-column prop="date" label="试题编号" width="140">
+        <el-table-column prop="number" label="试题编号" width="140">
         </el-table-column>
-        <el-table-column prop="name" label="学科" width="180">
+        <el-table-column prop="subjectID" label="学科" width="180">
         </el-table-column>
         <el-table-column
-          prop="address"
+          prop="catalogID"
           label="目录"
           width="180"
         ></el-table-column>
         <el-table-column
-          prop="address"
+          prop="questionType"
           label="题型"
-          width="180"
+          width="160"
         ></el-table-column>
+        <el-table-column prop="question" label="题干" width="220">
+          <template slot-scope="{ row }">
+            <span v-html="row.question"></span>
+          </template>
+        </el-table-column>
         <el-table-column
-          prop="address"
-          label="题干"
-          width="200"
-        ></el-table-column>
-        <el-table-column
-          prop="address"
+          prop="addDate"
           label="录入时间"
           width="200"
         ></el-table-column>
         <el-table-column
-          prop="address"
+          prop="difficulty"
           label="难度"
           width="200"
         ></el-table-column>
         <el-table-column
-          prop="address"
+          prop="creator"
           label="录入人"
           width="180"
         ></el-table-column>
-        <el-table-column
-          prop="address"
-          label="操作"
-          width="200"
-        ></el-table-column>
+        <el-table-column label="操作" width="200">
+          <template slot-scope="{ row }">
+            <el-button
+              type="primary"
+              style="background: #ecf5ff; color: #409eff"
+              icon="el-icon-view"
+              circle
+              @click="previewBtn(row)"
+            ></el-button>
+            <el-button
+              style="background: #f0f9eb; color: #67c23a"
+              type="success"
+              icon="el-icon-edit"
+              circle
+              @click="
+                $router.push({
+                  path: '/questions/new',
+                  params: {
+                    id: row.id,
+                  },
+                })
+              "
+            ></el-button>
+            <el-button
+              type="danger"
+              icon="el-icon-delete"
+              style="background: #fef0f0; color: #f56c6c"
+              circle
+              @click="delBtn(row.id)"
+            ></el-button>
+            <el-button
+              style="background: #fdf6ec; color: #f6ce8b"
+              type="success"
+              icon="el-icon-check"
+              circle
+              @click="addBtn(row.id)"
+            ></el-button>
+          </template>
+        </el-table-column>
       </el-table>
+      <el-pagination
+        style="float: right; margin-top: 20px; margin-bottom: 20px"
+        background
+        :page-sizes="[10, 20, 30, 50]"
+        :page-size="tableValue.pagesize"
+        layout="prev, pager, next,sizes,  jumper"
+        :total="counts"
+        :current-page.sync="tableValue.page"
+        @current-change="handleList"
+        @size-change="handleList"
+      >
+      </el-pagination>
     </el-card>
+    <PreviewDialog
+      :previewDialog.sync="previewDialog"
+      :currentRow="currentRow"
+    />
   </div>
 </template>
 
@@ -220,9 +270,11 @@
 import { simple } from '@/api/hmmm/subjects.js'
 import { questionType, difficulty, direction } from '@/api/hmmm/constants.js'
 import { provinces, citys } from '@/api/hmmm/citys.js'
-import { list } from '@/api/hmmm/questions.js'
+import { list, remove, choiceAdd } from '@/api/hmmm/questions.js'
+import PreviewDialog from './previewDialog.vue'
 export default {
   name: 'question_choice',
+  components: { PreviewDialog },
   data () {
     return {
       counts: 0,
@@ -243,7 +295,9 @@ export default {
       tableValue: {
         page: 1,
         pagesize: 10
-      }
+      },
+      previewDialog: false,
+      currentRow: {}
     }
   },
   created () {
@@ -297,8 +351,33 @@ export default {
       console.log(val)
     },
     async handleList () {
-      const res = await list(this.tableValue)
-      console.log(res)
+      const { data } = await list(this.tableValue)
+      // console.log(data)
+      this.tableData = data.items
+      this.counts = data.counts
+    },
+    async addBtn (id) {
+      await this.$confirm('是否添加到精选题库？', '提示', {
+        cancelButtonText: '取消',
+        confirmButtonText: '确定',
+        type: 'warning'
+      })
+      await choiceAdd({ id: id, choiceState: 1 })
+      this.handleList()
+    },
+    async delBtn (id) {
+      await this.$confirm('确定要删除吗？', '提示', {
+        cancelButtonText: '取消',
+        confirmButtonText: '确定',
+        type: 'warning'
+      })
+      await remove({ id: id })
+      this.handleList()
+    },
+    previewBtn (row) {
+      // console.log(row)
+      this.currentRow = row
+      this.previewDialog = true
     }
   }
 }
