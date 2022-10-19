@@ -102,8 +102,9 @@
         style="float: right; margin-top: 20px; margin-bottom: 20px"
         background
         :page-sizes="[10, 20, 30, 50]"
-        :page-size="page.pagesize"
+        :page-size.sync="page.pagesize"
         layout="prev, pager, next,sizes,jumper"
+        :current-page.sync="page.page"
         :total="count"
         @current-change="getTags"
         @size-change="getTags"
